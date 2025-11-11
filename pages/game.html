@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Flappy Unicorn • Pink Clouds</title>
+    <style>
+        /* Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            background: linear-gradient(180deg, #ffd1ec 0%, #ffe3f3 35%, #fff0f8 60%, #ffffff 100%);
+            color: #5b2a50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .game-shell {
+            width: 100%;
+            max-width: 720px;
+            aspect-ratio: 9/16;
+            position: relative;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(91,42,80,0.2);
+            background: radial-gradient(1200px 800px at 50% -200px, rgba(255, 182, 219, 0.6), transparent 60%),
+                        linear-gradient(180deg, rgba(255,205,235,0.7) 0%, rgba(255,255,255,0.0) 40%);
+            overflow: hidden;
+        }
+        canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .hud {
+            position: absolute;
+            top: 12px; left: 12px; right: 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .score {
+            background: rgba(255,255,255,0.65);
+            color: #5b2a50;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 16px;
+            backdrop-filter: blur(6px);
+        }
+        .btn {
+            pointer-events: auto;
+            background: linear-gradient(180deg, #ff8dc6 0%, #ff64b4 100%);
+            color: white; border: none; border-radius: 999px;
+            padding: 10px 16px; font-weight: 800; letter-spacing: .5px;
+            box-shadow: 0 8px 18px rgba(255, 100, 180, .35);
+            cursor: pointer;
+            transition: transform .08s ease, filter .2s ease;
+        }
+        .btn:active { transform: translateY(1px) scale(.99); }
+        .center-overlay {
+            position: absolute; inset: 0; display: grid; place-items: center; z-index: 3;
+        }
+        .card {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            padding: 20px 18px;
+            border-radius: 16px;
+            width: min(84%, 520px);
+            text-align: center;
+            box-shadow: 0 14px 28px rgba(91,42,80,0.18);
+        }
+        .title { font-weight: 900; font-size: 28px; margin-bottom: 10px; }
+        .subtitle { opacity: .85; margin-bottom: 16px; }
+        .controls { font-size: 14px; opacity: .9; margin-top: 8px; }
+        .pill {
+            display: inline-block;
+            padding: 6px 10px; border-radius: 999px; background: #ffe0f1; color:#5b2a50; font-weight: 700; margin: 0 4px;
+        }
+        /* Decorative floating clouds (CSS only, behind canvas) */
+        .clouds { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .cloud { position: absolute; background: rgba(255,255,255,0.95); border-radius: 999px; filter: blur(0.5px); }
+        .cloud.one { width: 180px; height: 60px; top: 12%; left: -120px; animation: drift 42s linear infinite; }
+        .cloud.two { width: 260px; height: 80px; top: 32%; left: -200px; animation: drift 55s linear infinite; opacity: .9; }
+        .cloud.three { width: 140px; height: 48px; top: 68%; left: -160px; animation: drift 48s linear infinite; opacity: .85; }
+        @keyframes drift { from { transform: translateX(0); } to { transform: translateX(120%); } }
+        /* Accessibility: prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .cloud.one, .cloud.two, .cloud.three { animation: none; }
+        }
+        @keyframes sparkle {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-shell" id="game">
+        <div class="clouds">
+            <div class="cloud one"></div>
+            <div class="cloud two"></div>
+            <div class="cloud three"></div>
+        </div>
+        <div class="hud">
+            <div class="score" id="score">0</div>
+            <button class="btn" id="btnRestart" aria-label="Restart" style="display:none">Restart</button>
+        </div>
+        <canvas id="canvas" width="360" height="640" aria-label="Flappy Unicorn Game Canvas"></canvas>
+        <div class="center-overlay" id="overlay">
+            <div class="card">
+                <div class="title">Flappy Unicorn</div>
+                <div class="subtitle">Glide through rainbow gates in a pink sky of clouds.</div>
+                <div class="controls">Tap/Click • <span class="pill">Space</span> • <span class="pill">↑</span></div>
+                <div style="height:10px"></div>
+                <button class="btn" id="btnPlay">Play</button>
+                <div style="height:12px"></div>
+                <div class="controls" id="bestLabel" style="display:none"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const overlay = document.getElementById('overlay');
+        const btnPlay = document.getElementById('btnPlay');
+        const btnRestart = document.getElementById('btnRestart');
+        const bestLabel = document.getElementById('bestLabel');
+
+        const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+        function resizeCanvas(){
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = Math.round(rect.width * DPR);
+            canvas.height = Math.round(rect.height * DPR);
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Game state
+        let gameState = 'idle'; // idle | playing | gameover
+        let score = 0; let best = Number(localStorage.getItem('flappyUnicornBest')||0);
+        let frames = 0; let lastTime = 0; let rafId = null;
+
+        // World constants (relative to logical canvas size)
+        const world = {
+            gravity: 0.4, // Reduced gravity for gentler falling
+            jumpVelocity: -8.5, // Stronger jump for easier control
+            unicornX: 88,
+            gap: 280, // Even bigger gap for easier gameplay
+            pipeWidth: 60, // Narrower pipes for easier passage
+            pipeInterval: 140, // More time between pipes
+            speed: 2.2 // Slower movement for easier reaction time
+        };
+
+        // Entities
+        const unicorn = { x: world.unicornX, y: 220, vy: 0, r: 18, t: 0 };
+        const pipes = []; // each: {x, topH}
+
+        function reset(){
+            score = 0; scoreEl.textContent = '0';
+            unicorn.y = 220; unicorn.vy = 0; unicorn.t = 0;
+            pipes.length = 0;
+            frames = 0; lastTime = 0;
+        }
+
+        // Input
+        function flap(){
+            if (gameState === 'idle') start();
+            if (gameState !== 'playing') return;
+            unicorn.vy = world.jumpVelocity;
+        }
+        window.addEventListener('keydown', (e)=>{
+            if (['Space','ArrowUp'].includes(e.code)) { e.preventDefault(); flap(); }
+        });
+        canvas.addEventListener('pointerdown', flap);
+        btnPlay.addEventListener('click', start);
+        btnRestart.addEventListener('click', ()=>{ reset(); start(); });
+
+        function start(){
+            reset();
+            overlay.style.display = 'none';
+            btnRestart.style.display = 'none';
+            gameState = 'playing';
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(loop);
+        }
+
+        function end(){
+            gameState = 'gameover';
+            best = Math.max(best, score);
+            localStorage.setItem('flappyUnicornBest', String(best));
+            bestLabel.textContent = `Best: ${best}`;
+            bestLabel.style.display = 'block';
+            overlay.style.display = 'grid';
+            btnRestart.style.display = 'inline-block';
+        }
+
+        function spawnPipe(){
+            const hCanvas = canvas.height / DPR;
+            // Ensure generous clearance above and below the gap for easy flying
+            const minTop = 80; // plenty of space from top edge
+            const maxTop = hCanvas - world.gap - 80; // plenty of space from bottom edge
+            const topH = minTop + Math.random() * (maxTop - minTop);
+            pipes.push({ x: canvas.width / DPR + 20, topH, passed: false });
+        }
+
+        function drawBackground(){
+            const w = canvas.width/DPR, h = canvas.height/DPR;
+            const gradient = ctx.createLinearGradient(0,0,0,h);
+            gradient.addColorStop(0,'#ffd1ec');
+            gradient.addColorStop(0.4,'#ffe3f3');
+            gradient.addColorStop(0.8,'#fff0f8');
+            gradient.addColorStop(1,'#ffffff');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0,0,w,h);
+
+            // Parallax soft clouds
+            const cloud = (x,y,s,op) => {
+                ctx.globalAlpha = op;
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.ellipse(x, y, 22*s, 12*s, 0, 0, Math.PI*2); // center puff
+                ctx.ellipse(x-16*s, y+4*s, 16*s, 10*s, 0, 0, Math.PI*2);
+                ctx.ellipse(x+18*s, y+6*s, 18*s, 11*s, 0, 0, Math.PI*2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            };
+            const t = frames;
+            const baseSpeed = world.speed * 0.4;
+            for (let i=0;i<5;i++) cloud((w+120) - ((t*baseSpeed + i*160) % (w+240)), 90 + i*80, 1 + (i%2)*0.2, 0.35);
+        }
+
+        function drawRainbowPipe(x, topH){
+            const w = world.pipeWidth, gap = world.gap, h = canvas.height/DPR;
+            const colors = ['#ff4aa2','#ff7ac8','#ffa6e3','#ffd1f2','#ffffff'];
+            // Top pipe (downwards)
+            for (let i=0;i<colors.length;i++){
+                ctx.fillStyle = colors[i];
+                ctx.fillRect(x+i*2, 0, (w - i*4), topH);
+            }
+            // Bottom pipe (upwards)
+            const bottomY = topH + gap;
+            for (let i=0;i<colors.length;i++){
+                ctx.fillStyle = colors[i];
+                ctx.fillRect(x+i*2, bottomY, (w - i*4), h - bottomY);
+            }
+            // Cloud caps
+            const cap = (cx, cy) => {
+                ctx.fillStyle = 'rgba(255,255,255,0.95)';
+                ctx.beginPath();
+                ctx.ellipse(cx+10, cy, 14, 8, 0, 0, Math.PI*2);
+                ctx.ellipse(cx-6, cy+4, 18, 10, 0, 0, Math.PI*2);
+                ctx.ellipse(cx+26, cy+6, 16, 9, 0, 0, Math.PI*2);
+                ctx.fill();
+            };
+            cap(x + w*0.4, topH);
+            cap(x + w*0.5, bottomY);
+        }
+
+        // Sparkle system
+        const sparkles = [];
+        
+        function createSparkle(x, y) {
+            return {
+                x, y,
+                size: Math.random() * 3 + 2,
+                life: 1,
+                color: `hsl(${Math.random() * 60 + 40}, 100%, 75%)`, // Golden yellow colors
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2
+            };
+        }
+
+        function updateAndDrawSparkles() {
+            // Create new sparkles
+            if (gameState === 'playing' && frames % 2 === 0) {
+                sparkles.push(createSparkle(unicorn.x - 20, unicorn.y));
+            }
+
+            // Update and draw sparkles
+            for (let i = sparkles.length - 1; i >= 0; i--) {
+                const s = sparkles[i];
+                s.life -= 0.04;
+                s.x += s.vx;
+                s.y += s.vy;
+                
+                if (s.life <= 0) {
+                    sparkles.splice(i, 1);
+                    continue;
+                }
+
+                ctx.beginPath();
+                ctx.fillStyle = s.color;
+                ctx.globalAlpha = s.life;
+                const angleOffset = frames * 0.1;
+                for (let j = 0; j < 5; j++) {
+                    const angle = (j * Math.PI * 2 / 5) + angleOffset;
+                    const x = s.x + Math.cos(angle) * s.size;
+                    const y = s.y + Math.sin(angle) * s.size;
+                    if (j === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function drawUnicorn(){
+            const x = unicorn.x, y = unicorn.y;
+            const flapPhase = Math.sin(unicorn.t*0.35);
+            // Body
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.ellipse(x, y, 26, 20, 0, 0, Math.PI*2);
+            ctx.fill();
+
+            // Head
+            ctx.beginPath();
+            ctx.ellipse(x+20, y-4, 16, 13, 0, 0, Math.PI*2);
+            ctx.fill();
+
+            // Ear
+            ctx.fillStyle = '#ffb9de';
+            ctx.beginPath();
+            ctx.moveTo(x+26, y-16);
+            ctx.lineTo(x+18, y-8);
+            ctx.lineTo(x+30, y-6);
+            ctx.closePath();
+            ctx.fill();
+
+            // Eye
+            ctx.fillStyle = '#5b2a50';
+            ctx.beginPath();
+            ctx.arc(x+26, y-3, 2.3, 0, Math.PI*2);
+            ctx.fill();
+
+            // Horn (gold)
+            ctx.fillStyle = '#ffd86b';
+            ctx.beginPath();
+            ctx.moveTo(x+30, y-10);
+            ctx.lineTo(x+42, y-16);
+            ctx.lineTo(x+32, y-2);
+            ctx.closePath();
+            ctx.fill();
+
+            // Mane (rainbow)
+            const maneColors = ['#ff4aa2','#ff7ac8','#ffa6e3','#ffd1f2'];
+            maneColors.forEach((c,i)=>{
+                ctx.fillStyle = c;
+                ctx.beginPath();
+                ctx.ellipse(x+6, y-12 + i*6, 10, 6, 0, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // Tail (sway)
+            const tailY = y + 8 + flapPhase*3;
+            maneColors.forEach((c,i)=>{
+                ctx.fillStyle = c;
+                ctx.beginPath();
+                ctx.ellipse(x-24, tailY + i*5, 10 - i*1.2, 5 - i*0.8, 0, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // Wings (flapping)
+            ctx.save();
+            ctx.translate(x-4, y-8);
+            ctx.rotate(-0.4 + flapPhase*0.5);
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 16, 8, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function collide(){
+            // bounds
+            const h = canvas.height/DPR;
+            if (unicorn.y + unicorn.r > h || unicorn.y - unicorn.r < 0) return true;
+            // pipes
+            for (const p of pipes){
+                const withinX = unicorn.x + unicorn.r > p.x && unicorn.x - unicorn.r < p.x + world.pipeWidth;
+                if (!withinX) continue;
+                if (unicorn.y - unicorn.r < p.topH || unicorn.y + unicorn.r > p.topH + world.gap) return true;
+            }
+            return false;
+        }
+
+        function loop(ts){
+            const w = canvas.width/DPR, h = canvas.height/DPR;
+            // timing (fixed-ish)
+            const dt = Math.min(32, ts - lastTime || 16) / 16.6667; // max ~2 frames
+            lastTime = ts;
+            frames++;
+
+            // Update
+            if (frames % world.pipeInterval === 0) spawnPipe();
+            unicorn.vy += world.gravity * dt;
+            unicorn.y += unicorn.vy * dt;
+            unicorn.t += dt * 10;
+
+            for (const p of pipes){ p.x -= world.speed * dt * 60/60; }
+            while (pipes.length && pipes[0].x + world.pipeWidth < -30) pipes.shift();
+
+            for (const p of pipes){
+                if (!p.passed && p.x + world.pipeWidth < unicorn.x){
+                    p.passed = true; score++; scoreEl.textContent = String(score);
+                }
+            }
+
+            // Draw
+            ctx.clearRect(0,0,w,h);
+            drawBackground();
+            for (const p of pipes) drawRainbowPipe(p.x, p.topH);
+            updateAndDrawSparkles(); // Draw sparkles behind unicorn
+            drawUnicorn();
+
+            if (collide()) { end(); return; }
+            if (gameState === 'playing') rafId = requestAnimationFrame(loop);
+        }
+
+        // Show best on idle
+        if (best > 0) { bestLabel.textContent = `Best: ${best}`; bestLabel.style.display = 'block'; }
+    })();
+    </script>
+</body>
+</html>

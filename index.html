@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amelia Davis - Personal Website</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/sparkles.js"></script>
+    <style>
+        /* Stardust particles style */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            background: radial-gradient(circle, #ffd700 0%, #ffec8b 25%, rgba(255, 215, 0, 0) 100%);
+            border-radius: 50%;
+            z-index: 9999;
+            box-shadow: 0 0 10px #ffeb3b, 0 0 20px rgba(255, 215, 0, 0.5);
+            mix-blend-mode: screen;
+        }
+
+        :root {
+            --wood-brown: #8B4513;
+            --light-wood: #DEB887;
+            --forest-green: #2F4F4F;
+            --sage: #8FBC8F;
+            --lake-blue: #4682B4;
+            --sky-blue: #87CEEB;
+            --cream: #F5F5DC;
+            --gradient-1: linear-gradient(45deg, var(--wood-brown), var(--forest-green));
+            --gradient-2: linear-gradient(135deg, var(--lake-blue), var(--sage));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--cream) 0%, #E8EFE6 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--forest-green);
+        }
+
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(rgba(47, 79, 79, 0.8), rgba(70, 130, 180, 0.7)), url('Media/081A0305 copy.jpeg');
+            background-size: cover;
+            background-position: center;
+            color: rgb(248, 248, 248);
+        }
+
+        .content-wrapper {
+            max-width: 1200px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--forest-green);
+            background: rgba(245, 245, 220, 0.9);
+            border: 2px solid var(--sage);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(47, 79, 79, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(47, 79, 79, 0.3);
+            background: var(--forest-green);
+            color: var(--cream);
+            border-color: var(--sage);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo a {
+            color: var(--wood-brown);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--forest-green);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--lake-blue);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--lake-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-content">
+            <div class="nav-logo">
+                <a href="index.html">Amelia Davis</a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="pages/career.html">Career</a>
+                <a href="pages/resume.html">Resume</a>
+                <a href="pages/hobbies.html">Hobbies</a>
+                <a href="pages/discover.html">Discover</a>
+                <a href="pages/game.html">Game</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="content-wrapper animate__animated animate__fadeIn">
+            <h1 class="animate__animated animate__fadeInDown">Amelia Davis's Website</h1>
+            <a href="pages/about.html" class="cta-button interactive-hover animate__animated animate__bounceIn animate__delay-2s">Learn About Me</a>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+            </svg>
+        </div>
+    </section>
+
+    <script>
+        // Add hover effect to all interactive elements
+        document.querySelectorAll('.interactive-hover').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.filter = 'brightness(1.1)';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+                this.style.filter = 'brightness(1)';
+            });
+        });
+
+        // Stardust effect
+        document.addEventListener('mousemove', function(e) {
+            createParticle(e.clientX, e.clientY);
+        });
+
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Random size between 3 and 7 pixels
+            const size = Math.random() * 4 + 3;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Position at mouse cursor
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            
+            // Add some randomness to movement
+            const destinationX = x + (Math.random() - 0.5) * 50;
+            const destinationY = y + (Math.random() - 0.5) * 50;
+            
+            document.body.appendChild(particle);
+            
+            // Animate the particle
+            const animation = particle.animate([
+                {
+                    transform: 'translate(0, 0)',
+                    opacity: 0.8
+                },
+                {
+                    transform: `translate(${destinationX - x}px, ${destinationY - y}px)`,
+                    opacity: 0
+                }
+            ], {
+                duration: 1000,
+                easing: 'cubic-bezier(0,0,0.2,1)'
+            });
+            
+            // Remove particle when animation is complete
+            animation.onfinish = () => {
+                particle.remove();
+            };
+        }
+    </script>
+</body>
+</html>
