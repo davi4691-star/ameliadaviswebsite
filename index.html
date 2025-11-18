@@ -176,6 +176,29 @@
         .nav-links a.active::after {
             width: 100%;
         }
+        
+        /* --- START OF VIDEO CSS ADDITION --- */
+        .video-container {
+            /* Creates a 16:9 aspect ratio container */
+            position: relative;
+            width: 100%; 
+            padding-bottom: 56.25%; /* (9 / 16) * 100% */
+            height: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 8px; /* Optional: adds rounded corners */
+        }
+
+        .video-container iframe {
+            /* Makes the iframe fill the container responsively */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none; /* Removes the default iframe border */
+        }
+        /* --- END OF VIDEO CSS ADDITION --- */
 
         @media (max-width: 768px) {
             h1 {
@@ -222,6 +245,25 @@
         </div>
     </section>
 
+    <section id="featured-video" style="padding: 4rem 2rem; max-width: 900px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--wood-brown);">Welcome Video</h2>
+
+        <div class="video-container">
+            <iframe 
+                src="https://www.youtube.com/embed/NPg9NpvQnHo"
+                title="Welcome Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-in; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="social-links" style="margin-top: 3rem;">
+            <h3 style="font-weight: 600; margin-bottom: 1rem;">Connect with Amelia</h3>
+            <a href="https://www.instagram.com/ameliadavis_44" target="_blank" style="font-size: 2.5rem; color: #E1306C; transition: color 0.3s ease;">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+    </section>
     <script>
         // Add hover effect to all interactive elements
         document.querySelectorAll('.interactive-hover').forEach(element => {

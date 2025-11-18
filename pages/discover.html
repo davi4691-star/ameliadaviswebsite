@@ -1,302 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discover - Amelia Davis</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="../js/sparkles.js"></script>
-    <style>
-        :root {
-            --wood-brown: #8B4513;
-            --light-wood: #DEB887;
-            --forest-green: #2F4F4F;
-            --sage: #8FBC8F;
-            --lake-blue: #4682B4;
-            --sky-blue: #87CEEB;
-            --cream: #F5F5DC;
-            --gradient-1: linear-gradient(45deg, var(--wood-brown), var(--forest-green));
-            --gradient-2: linear-gradient(135deg, var(--lake-blue), var(--sage));
-        }
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Discover - Amelia Davis</title>
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+   <script src="../js/sparkles.js"></script>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+   <style>
+       :root {
+           --wood-brown: #8B4513;
+           --light-wood: #DEB887;
+           --forest-green: #2F4F4F;
+           --sage: #8FBC8F;
+           --lake-blue: #4682B4;
+           --sky-blue: #87CEEB;
+           --cream: #F5F5DC;
+       }
 
-        body {
-            background: linear-gradient(135deg, var(--cream) 0%, #E8EFE6 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: var(--forest-green);
-        }
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+           font-family: 'Poppins', sans-serif;
+       }
 
-        .main-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+       body {
+           background: linear-gradient(135deg, var(--cream) 0%, #E8EFE6 100%);
+           min-height: 100vh;
+           overflow-x: hidden;
+           color: var(--forest-green);
+       }
 
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+       .main-nav {
+           position: fixed;
+           top: 0;
+           left: 0;
+           right: 0;
+           background: rgba(255, 255, 255, 0.95);
+           backdrop-filter: blur(10px);
+           z-index: 1000;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+       }
 
-        .nav-logo a {
-            color: var(--wood-brown);
-            text-decoration: none;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
+       .nav-content {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 1rem 2rem;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+       }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
+       .nav-logo a {
+           color: var(--wood-brown);
+           text-decoration: none;
+           font-size: 1.5rem;
+           font-weight: 600;
+       }
 
-        .nav-links a {
-            color: var(--forest-green);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-        }
+       .nav-links {
+           display: flex;
+           gap: 2rem;
+       }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--lake-blue);
-        }
+       .nav-links a {
+           color: var(--forest-green);
+           text-decoration: none;
+           font-weight: 500;
+           transition: color 0.3s ease;
+           position: relative;
+       }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--lake-blue);
-            transition: width 0.3s ease;
-        }
+       .nav-links a:hover,
+       .nav-links a.active {
+           color: var(--lake-blue);
+       }
 
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
-        }
+       .discover-section {
+           padding: 8rem 2rem 4rem;
+           max-width: 1200px;
+           margin: 0 auto;
+       }
 
-        .discover-section {
-            padding: 8rem 2rem 4rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+       .discover-container {
+           background: rgba(255, 255, 255, 0.9);
+           padding: 3rem;
+           border-radius: 20px;
+           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+       }
 
-        .discover-container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-        }
+       .section-title {
+           text-align: center;
+           font-size: 2.5rem;
+           margin-bottom: 2rem;
+       }
 
-        .section-title {
-            color: var(--forest-green);
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
+       .section-description {
+           text-align: center;
+           max-width: 800px;
+           margin: 0 auto 3rem;
+       }
 
-        .section-description {
-            text-align: center;
-            color: var(--wood-brown);
-            max-width: 800px;
-            margin: 0 auto 3rem;
-            line-height: 1.6;
-        }
+       .media-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: 2rem;
+       }
 
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
+       .media-card {
+           background: rgba(255, 255, 255, 0.85);
+           border-radius: 15px;
+           overflow: hidden;
+           box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+           transition: transform 0.3s ease;
+       }
 
-        .media-card {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+       .media-card:hover {
+           transform: translateY(-8px) scale(1.03);
+       }
 
-        .media-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
+       .media-image {
+           width: 100%;
+           height: 250px;
+           object-fit: cover;
+       }
 
-        .media-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
+       .media-content {
+           padding: 1.5rem;
+       }
 
-        .media-video {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
+       .media-title {
+           font-size: 1.2rem;
+           font-weight: 700;
+           margin-bottom: 0.5rem;
+       }
 
-        .media-content {
-            padding: 1.5rem;
-        }
-
-        .media-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--forest-green);
-        }
-
-        .media-description {
-            color: var(--wood-brown);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .media-date {
-            color: var(--lake-blue);
-            font-size: 0.8rem;
-            margin-top: 1rem;
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .nav-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1rem;
-            }
-
-            .discover-section {
-                padding: 6rem 1rem 2rem;
-            }
-
-            .discover-container {
-                padding: 1.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .media-card {
-                margin-bottom: 1rem;
-            }
-        }
-
-        /* Lightbox styles */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1100;
-            cursor: pointer;
-        }
-
-        .lightbox img, .lightbox video {
-            max-width: 90%;
-            max-height: 90vh;
-            margin: auto;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .lightbox.active {
-            display: block;
-        }
-    </style>
+       iframe {
+           width: 100%;
+           height: 250px;
+           border: none;
+       }
+   </style>
 </head>
+
 <body>
-    <nav class="main-nav">
-        <div class="nav-content">
-            <div class="nav-logo">
-                <a href="../index.html">Amelia Davis</a>
-            </div>
-            <div class="nav-links">
-                <a href="../index.html">Home</a>
-                <a href="career.html">Career</a>
-                <a href="resume.html">Resume</a>
-                <a href="hobbies.html">Hobbies</a>
-                <a href="discover.html" class="active">Discover</a>
-                <a href="game.html">Game</a>
-            </div>
-        </div>
-    </nav>
 
-    <section class="discover-section">
-        <div class="discover-container animate__animated animate__fadeIn">
-            <h1 class="section-title">Discover My Journey</h1>
-            <p class="section-description">
-                Explore my adventures, creative projects, and memorable moments through this visual journey.
-                Click on any image or video to view it in full size.
-            </p>
-            <div class="media-grid">
-                <!-- Media content will be added here -->
-            </div>
-        </div>
-    </section>
+   <nav class="main-nav">
+       <div class="nav-content">
+           <div class="nav-logo">
+               <a href="../index.html">Amelia Davis</a>
+           </div>
+           <div class="nav-links">
+               <a href="../index.html">Home</a>
+               <a href="career.html">Career</a>
+               <a href="resume.html">Resume</a>
+               <a href="hobbies.html">Hobbies</a>
+               <a href="discover.html" class="active">Discover</a>
+               <a href="game.html">Game</a>
+           </div>
+       </div>
+   </nav>
 
-    <!-- Lightbox for fullscreen media viewing -->
-    <div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
-        <!-- Media will be inserted here when clicked -->
-    </div>
+   <section class="discover-section">
+       <div class="discover-container animate__animated animate__fadeIn">
 
-    <script>
-        // Lightbox functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const lightbox = document.getElementById('lightbox');
-            
-            // Handle media clicks
-            document.querySelectorAll('.media-card img, .media-card video').forEach(media => {
-                media.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const clone = this.cloneNode(true);
-                    lightbox.innerHTML = '';
-                    lightbox.appendChild(clone);
-                    lightbox.classList.add('active');
+           <h1 class="section-title">Discover Duluth, Minnesota</h1>
+           <p class="section-description">
+               Experience the charm of Duluth — from its scenic lakefront and cozy local shops 
+               to the inspiring campus life at the University of Minnesota Duluth.
+           </p>
 
-                    // If it's a video, play it
-                    if (clone.tagName === 'VIDEO') {
-                        clone.controls = true;
-                        clone.play();
-                    }
-                });
-            });
-        });
-    </script>
+           <div class="media-grid">
+
+               <!-- CANAL PARK -->
+               <div class="media-card">
+                   <img src="../media/downtownduluth_8322.jpg" class="media-image" alt="Canal Park">
+                   <div class="media-content">
+                       <h3 class="media-title">Canal Park</h3>
+                       <p>A beautiful lakefront area with shopping, food, views, and the iconic Aerial Lift Bridge.</p>
+                   </div>
+               </div>
+
+               <!-- FITGER'S -->
+               <div class="media-card">
+                   <img src="../media/fitgers.jpg" class="media-image" alt="Fitger’s Shops">
+                   <div class="media-content">
+                       <h3 class="media-title">Fitger’s Shops</h3>
+                       <p>Historic brick building full of boutiques, coffee, restaurants, and lakewalk access.</p>
+                   </div>
+               </div>
+
+               <!-- LAKE SUPERIOR -->
+               <div class="media-card">
+                   <img src="../media/bench_4052.jpg" class="media-image" alt="Lake Superior">
+                   <div class="media-content">
+                       <h3 class="media-title">Lake Superior</h3>
+                       <p>One of the most stunning natural views in the Midwest — peaceful, huge, and unforgettable.</p>
+                   </div>
+               </div>
+
+               <!-- UMD CAMPUS -->
+               <div class="media-card">
+                   <img src="../media/duluthcampus.jpg" class="media-image" alt="UMD Campus">
+                   <div class="media-content">
+                       <h3 class="media-title">University of Minnesota Duluth</h3>
+                       <p>A welcoming campus surrounded by nature with modern buildings and indoor tunnels.</p>
+                   </div>
+               </div>
+
+               <!-- YOUTUBE VIDEO CARD -->
+               <div class="media-card">
+                   <iframe 
+                       src="https://www.youtube.com/embed/x4ACY96F_Og"
+                       title="Discover UMD Duluth"
+                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                       allowfullscreen>
+                   </iframe>
+
+                   <div class="media-content">
+                       <h3 class="media-title">Discover Duluth Video</h3>
+                       <p>A quick visual tour of UMD and the beautiful city of Duluth.</p>
+                   </div>
+               </div>
+
+           </div>
+       </div>
+   </section>
+
 </body>
 </html>
